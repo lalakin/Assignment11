@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Directory</title>
+	
+	<script src="js/mobil.js"></script>
+    <link href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/styles.css">
+
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script>
+		$(document).ready(function(){
+		
+			var output="";
+			$.getJSON("data/team.json", function(data) {
+				
+				$.each(data, function() {
+					$.each(this, function(key, value) {
+						 output += '<li><a href="#" id="' + key + '" class="info-go">' + "<img src="  + value.ImagePath + ">"+  value.name + "<p>" + value.title + "</p>" + '</a></li>';
+					});
+				
+					$('#prof-list').append(output).promise().done(function() {
+						$(this).listview("refresh");
+						$(this).on("click", "li", function(e) {
+							//e.preventDefault();
+							if ($('body').find("#details-page").length != 0) $("#details-page").remove();
+					var currentItem = $(this).index();
+							
+					var newPage = $("<div data-role='page' id='details-page'><div data-role='header' data-theme='b'><a href='#' class= 'ui-btn ui-corner-all ui-icon-back ui-btn-icon-left' data-rel='back'>Back</a><h1>Employee Details</h1><a href='#info-page' class= 'ui-btn ui-corner-all ui-icon-search ui-btn-icon-left' data-rel='back'>Search</a></div><section data-role='content'><img class='myImg' src=" + data.teammembers[currentItem].ImagePath + '>' + "<h4>" +  data.teammembers[currentItem].name + '</h4><p>' +  data.teammembers[currentItem].title + '</p>' + '<ul data-role="listview" data-inset="true" class="clear"><li><a href="#">Call Office<p>' +  data.teammembers[currentItem].OfficeNumber + '</p>' + '</a></li><li><a href="#">Call Cell<p>' +  data.teammembers[currentItem].CellNumber + '</p>' + '</a></li><li><a href="#">Email<p>' +  data.teammembers[currentItem].Email + '</p>' + '</a></li>' + '</ul>' + "</section></div>");
+							
+							newPage.appendTo($.mobile.pageContainer);
+							$.mobile.changePage("#details-page");
+				});
+
+			});
+		
+		});
+
+	});//GET Json
+			
+});	//doc ready
+</script>
+	</head>
+<body>
+    <!-- FIRST PAGE -->
+    <div data-role="page" id="info-page">
+
+        <header data-role="header" data-theme="b">
+			<h1>Directory</h1>
+			
+		</header>
+		<section data-role="content">
+			<form class="ui-filterable">
+				<input type="search" name="search" id="myFilter" placeholder="Search" class="ui-icon-search">
+			</form>
+		
+        
+            <h3>Welcome to Directory!</h3>
+            <p>This is our company directory.</p>
+			<ul data-role="listview" id="prof-list" data-inset="true" data-filter="true" data-input="#myFilter" data-filter-reveal="true">
+			</ul>
+
+        </section>
+
+    </div>
+	
+	
+</body>
+</html>
